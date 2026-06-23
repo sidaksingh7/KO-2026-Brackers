@@ -188,6 +188,20 @@ hr.sep{border:none;border-top:1px solid var(--gray3);margin:20px 0}
 .np-court-status{font-size:10px;color:var(--dim)}
 .np-court-status.live{color:var(--live);font-weight:700}
 .np-mode-tag{font-size:11px;color:var(--gold);margin-bottom:10px;font-weight:600}
+/* Rosters editor */
+.roster-import{background:var(--navy);border:1px dashed var(--gold);border-radius:8px;padding:12px;margin-bottom:14px}
+.roster-import h4{font-size:12px;color:var(--gold);margin-bottom:6px}
+.roster-import p{font-size:11px;color:var(--dim);margin-bottom:8px;line-height:1.5}
+.roster-import input[type=file]{font-size:12px;color:var(--text);margin-bottom:8px;width:100%}
+.roster-import textarea{width:100%;background:var(--gray2);border:1px solid var(--gray3);color:var(--text);border-radius:6px;padding:8px;font-size:12px;font-family:monospace;min-height:70px;resize:vertical}
+.roster-import textarea:focus{outline:none;border-color:var(--gold)}
+.roster-team-sel{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.roster-team-sel select{flex:1;min-width:160px;background:var(--navy);border:1px solid var(--gray3);color:var(--text);padding:8px 10px;border-radius:6px;font-size:13px}
+.roster-team-sel select:focus{outline:none;border-color:var(--gold)}
+.roster-count{font-size:11px;color:var(--dim)}
+#rosterTextarea{width:100%;background:var(--navy);border:1px solid var(--gray3);color:var(--text);border-radius:8px;padding:10px;font-size:13px;min-height:200px;resize:vertical;line-height:1.7}
+#rosterTextarea:focus{outline:none;border-color:var(--gold)}
+.roster-hint{font-size:11px;color:var(--dim);margin:6px 0}
 
 /* ── TV MODE ── */
 .tv-overlay{display:none;position:fixed;inset:0;background:var(--navy);z-index:400;flex-direction:column}
@@ -440,8 +454,18 @@ body.tv-on .header,.tv-on .sport-tabs,.tv-on #liveBanner,.tv-on .view{display:no
 .lc-et-btn.yellow{border-color:#ca8a04;color:#fde047}
 .lc-et-btn.red-card{border-color:var(--live);color:#fca5a5}
 .lc-et-btn.foul{border-color:var(--dim)}
+/* per-team event blocks */
+.lc-evt-teams{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lc-evt-team-block{background:var(--gray2);border:1px solid var(--gray3);border-radius:7px;padding:8px;display:flex;flex-direction:column;gap:5px}
+.lc-evt-team-hdr{font-size:11px;font-weight:800;text-align:center;color:var(--gold-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-bottom:4px;border-bottom:1px solid var(--gray3)}
+.lc-evt-team-block .lc-et-btn{width:100%;text-align:center;padding:6px 4px;font-size:12px}
+.lc-evt-goal-btn{padding:8px 4px!important;font-size:13px!important;font-weight:800!important;border-color:#22c55e!important;color:#fff!important;background:linear-gradient(135deg,rgba(20,83,45,.6),rgba(22,101,52,.6))!important}
+.lc-evt-goal-btn:hover{background:linear-gradient(135deg,#15803d,#16a34a)!important}
 
-.lc-event-list{display:flex;flex-direction:column;gap:3px;max-height:130px;overflow-y:auto}
+.lc-event-list{display:flex;flex-direction:column;gap:3px;max-height:160px;overflow-y:auto}
+.lc-event-list-hdr{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.lc-event-list-hdr .live-dot{width:7px;height:7px;border-radius:50%;background:var(--live);animation:pulse 1.2s infinite}
+.lc-event-row.newest{background:rgba(212,160,23,.12);border:1px solid rgba(212,160,23,.3)}
 .lc-event-row{display:flex;align-items:center;gap:7px;font-size:11px;padding:4px 6px;background:var(--gray2);border-radius:4px}
 .lc-er-icon{font-size:12px;flex-shrink:0}
 .lc-er-min{color:var(--dim);font-size:10px;font-weight:700;min-width:20px}
@@ -535,16 +559,19 @@ body.tv-on .header,.tv-on .sport-tabs,.tv-on #liveBanner,.tv-on .view{display:no
 <div class="modal-overlay" id="setupModal">
   <div class="modal">
     <h2>⚙️ Team Setup</h2>
-    <p>Enter team names. Saving rebuilds all brackets and schedules.</p>
+    <div class="setup-tabs" style="margin-bottom:8px">
+      <button class="btn btn-gold" onclick="switchSetupMode('names')" id="smode-names">✏️ Team Names</button>
+      <button class="btn btn-outline" onclick="switchSetupMode('players')" id="smode-players">👥 Players (Rosters)</button>
+    </div>
     <div class="setup-tabs" id="setupTabs">
-      <button class="btn btn-gold" onclick="switchSetupSport('soccer')" id="sst-soccer">⚽ Soccer (20)</button>
-      <button class="btn btn-outline" onclick="switchSetupSport('basketball')" id="sst-basketball">🏀 Basketball (20)</button>
-      <button class="btn btn-outline" onclick="switchSetupSport('volleyball')" id="sst-volleyball">🏐 Volleyball (20)</button>
+      <button class="btn btn-gold" onclick="switchSetupSport('soccer')" id="sst-soccer">⚽ Soccer</button>
+      <button class="btn btn-outline" onclick="switchSetupSport('basketball')" id="sst-basketball">🏀 Basketball</button>
+      <button class="btn btn-outline" onclick="switchSetupSport('volleyball')" id="sst-volleyball">🏐 Volleyball</button>
     </div>
     <div id="setupBody"></div>
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal('setupModal')">Cancel</button>
-      <button class="btn btn-gold" onclick="saveSetup()">Save & Rebuild</button>
+      <button class="btn btn-gold" onclick="saveSetup()">💾 Save</button>
     </div>
   </div>
 </div>
@@ -579,7 +606,7 @@ body.tv-on .header,.tv-on .sport-tabs,.tv-on #liveBanner,.tv-on .view{display:no
     <button class="nav-btn active" onclick="showView('dashboard')" id="nav-dashboard">📊 Brackets</button>
     <button class="nav-btn" onclick="showView('schedule')" id="nav-schedule">📅 Schedule</button>
     <button class="nav-btn" onclick="showView('scorer')" id="nav-scorer">⌨️ Score Entry</button>
-    <button class="nav-btn" onclick="openModal('setupModal');switchSetupSport('soccer')">⚙️ Setup</button>
+    <button class="nav-btn" onclick="openModal('setupModal');setupMode='names';switchSetupMode('names');switchSetupSport('soccer')">⚙️ Setup</button>
     <button class="nav-btn" onclick="openNowPlaying()" id="nav-nowplaying">🎯 Now Playing</button>
     <button class="nav-btn" onclick="showView('livecontrol')" id="nav-livecontrol">🎮 Live Control</button>
     <button class="nav-btn" onclick="enterTV()">📺 TV Mode</button>
@@ -931,13 +958,40 @@ function defaultState() {
     events: {},         // gameId -> [{id,type,team,player,minute,ts}]
     timers: {},         // gameId -> {startedAt,accumulated,running,duration}
     activeCourts: null, // null = AUTO (follow schedule); [] / [names] = manual
+    rosters: { soccer:{}, basketball:{}, volleyball:{} }, // sport -> teamIdx -> [players]
   };
   buildAllGames(s);
   return s;
 }
 
+// Re-resolve any "T#" placeholder team names from the roster of names.
+// The game's `desc` (e.g. "T17 vs T18") is the source of truth for which
+// seed index each side is, so this self-heals old/Firebase data that still
+// shows raw T-refs instead of real team names.
+function normalizeTeamNames(s) {
+  if (!s || !s.games) return s;
+  if (!s.rosters) s.rosters = { soccer:{}, basketball:{}, volleyball:{} };
+  Object.values(s.games).forEach(g => {
+    const parts = (g.desc || '').split(' vs ');
+    const list = (s.teams && s.teams[g.sport]) || [];
+    [['team1', 0], ['team2', 1]].forEach(([key, i]) => {
+      const raw = (parts[i] || '').trim();
+      const m = raw.match(/^T(\d+)$/);
+      if (m) {
+        const idx = parseInt(m[1]) - 1;
+        g[key + 'Idx'] = idx;
+        // Only overwrite if current value is still a raw ref or empty
+        if (/^T\d+$/.test(g[key] || '') || !g[key] || g[key] === 'TBD') {
+          g[key] = list[idx] || raw;
+        }
+      }
+    });
+  });
+  return s;
+}
+
 let state = (() => {
-  try { const r = JSON.parse(localStorage.getItem(SK)); if (r?.games) return r; } catch(e) {}
+  try { const r = JSON.parse(localStorage.getItem(SK)); if (r?.games) return normalizeTeamNames(r); } catch(e) {}
   return defaultState();
 })();
 
@@ -1894,12 +1948,20 @@ function lcSaveTeamName(gameId, teamKey, el) {
   const g = state.games[gameId];
   if (!g) return;
   g[teamKey] = name;
-  // Sync back into teams array if we can identify the index
+  // Write back to the master team list by seed index, and propagate to every
+  // game that references the same seed, so the rename sticks everywhere.
+  const idx = g[teamKey + 'Idx'];
+  if (idx != null && state.teams[g.sport]) {
+    state.teams[g.sport][idx] = name;
+    Object.values(state.games).filter(x => x.sport === g.sport).forEach(x => {
+      if (x.team1Idx === idx) x.team1 = name;
+      if (x.team2Idx === idx) x.team2 = name;
+    });
+  }
   save();
   renderAll();
-  // Update banner + bracket (don't re-render the whole LC card to avoid losing focus)
   const otherEl = document.getElementById(`lc-name-${gameId}-${teamKey}`);
-  if (otherEl) otherEl.textContent = name;
+  if (otherEl && otherEl !== el) otherEl.textContent = name;
 }
 
 // ── Quick event entry ──
@@ -1982,39 +2044,54 @@ function lcSetSport(sp) {
   renderLCGrid();
 }
 
-function lcEventButtons(g) {
-  const sport = g.sport;
-  if (sport === 'soccer') return [
-    `<button class="lc-et-btn goal-t1" onclick="lcLogEvent('${g.id}','team1','goal')">⚽ Goal — <span id="lc-name-${g.id}-team1-btn">${g.team1.slice(0,10)}</span></button>`,
-    `<button class="lc-et-btn goal-t2" onclick="lcLogEvent('${g.id}','team2','goal')">⚽ Goal — <span id="lc-name-${g.id}-team2-btn">${g.team2.slice(0,10)}</span></button>`,
-    `<button class="lc-et-btn yellow" onclick="lcLogEvent('${g.id}',_lcTeamChoice('${g.id}'),'yellow')">🟡 Yellow</button>`,
-    `<button class="lc-et-btn red-card" onclick="lcLogEvent('${g.id}',_lcTeamChoice('${g.id}'),'red')">🔴 Red</button>`,
-    `<button class="lc-et-btn foul" onclick="lcLogEvent('${g.id}',_lcTeamChoice('${g.id}'),'foul')">⚠️ Foul</button>`,
-  ].join('');
-  if (sport === 'basketball') return [
-    `<button class="lc-et-btn goal-t1" onclick="lcLogEvent('${g.id}','team1','goal')">🏀 +2 — ${g.team1.slice(0,8)}</button>`,
-    `<button class="lc-et-btn goal-t2" onclick="lcLogEvent('${g.id}','team2','goal')">🏀 +2 — ${g.team2.slice(0,8)}</button>`,
-    `<button class="lc-et-btn foul" onclick="lcLogEvent('${g.id}',_lcTeamChoice('${g.id}'),'foul')">✋ Foul</button>`,
-    `<button class="lc-et-btn yellow" onclick="lcLogEvent('${g.id}',_lcTeamChoice('${g.id}'),'travel')">🚶 Travel</button>`,
-    `<button class="lc-et-btn red-card" onclick="lcLogEvent('${g.id}',_lcTeamChoice('${g.id}'),'technical')">⚡ Technical</button>`,
-  ].join('');
-  // volleyball
-  return [
-    `<button class="lc-et-btn goal-t1" onclick="lcLogEvent('${g.id}','team1','goal')">🏐 Point — ${g.team1.slice(0,8)}</button>`,
-    `<button class="lc-et-btn goal-t2" onclick="lcLogEvent('${g.id}','team2','goal')">🏐 Point — ${g.team2.slice(0,8)}</button>`,
-    `<button class="lc-et-btn yellow" onclick="lcLogEvent('${g.id}',_lcTeamChoice('${g.id}'),'sanction')">⚠️ Sanction</button>`,
-  ].join('');
+// Per-sport event button definitions: {type, icon, label, cls}
+// `goal` is the score-incrementing primary action.
+const LC_EVT_DEFS = {
+  soccer: [
+    {type:'goal',     icon:'⚽', label:'GOAL',   primary:true},
+    {type:'yellow',   icon:'🟡', label:'Yellow', cls:'yellow'},
+    {type:'red',      icon:'🔴', label:'Red',    cls:'red-card'},
+    {type:'foul',     icon:'⚠️', label:'Foul',   cls:'foul'},
+  ],
+  basketball: [
+    {type:'goal',     icon:'🏀', label:'SCORE',  primary:true},
+    {type:'foul',     icon:'✋', label:'Foul',   cls:'foul'},
+    {type:'travel',   icon:'🚶', label:'Travel', cls:'yellow'},
+    {type:'technical',icon:'⚡', label:'Tech',   cls:'red-card'},
+  ],
+  volleyball: [
+    {type:'goal',     icon:'🏐', label:'POINT',  primary:true},
+    {type:'sanction', icon:'⚠️', label:'Sanction',cls:'yellow'},
+    {type:'red',      icon:'🔴', label:'Red',    cls:'red-card'},
+  ],
+};
+
+// Buttons for ONE team — makes it obvious which team a card/goal applies to
+function lcTeamEventButtons(g, teamKey) {
+  return (LC_EVT_DEFS[g.sport] || []).map(d =>
+    `<button class="lc-et-btn ${d.primary?'lc-evt-goal-btn':(d.cls||'')}" onclick="lcLogEvent('${g.id}','${teamKey}','${d.type}')">${d.icon} ${d.label}</button>`
+  ).join('');
 }
 
-// Helper: for card/foul buttons pick the highlighted team (or team1 fallback)
-const _lcTeamHighlight = {};
-function _lcTeamChoice(gameId) {
-  return _lcTeamHighlight[gameId] || 'team1';
+// Combined player roster (both teams) for autocomplete in this game's card
+function lcGameRoster(g) {
+  const r = (state.rosters && state.rosters[g.sport]) || {};
+  const a = (g.team1Idx != null ? (r[g.team1Idx]||[]) : []);
+  const b = (g.team2Idx != null ? (r[g.team2Idx]||[]) : []);
+  return [...a, ...b];
 }
 
-function lcCardHtml(gameId) {
-  const g = lcGetCurrentGame(gameId) || state.games[gameId]; // gameId here is actually a court
-  return '';
+// Event rows for a card — NEWEST FIRST so latest goals/cards show at top
+function lcEventRowsHtml(g) {
+  const evts = getGameEvents(g.id).slice().reverse();
+  if (!evts.length) return '<div style="color:var(--dim);font-size:11px;text-align:center;padding:6px">No events yet</div>';
+  return evts.map((e,i) => `<div class="lc-event-row ${i===0?'newest':''}">
+      <span class="lc-er-icon">${evtIcon(g.sport,e.type)}</span>
+      <span class="lc-er-min">${e.minute}'</span>
+      <span class="lc-er-player">${e.player||e.type}</span>
+      <span class="lc-er-team">${(e.team==='team1'?g.team1:g.team2).slice(0,10)}</span>
+      <button class="lc-er-del" onclick="deleteEvent('${g.id}','${e.id}');lcRefreshCard('${g.id}')">✕</button>
+    </div>`).join('');
 }
 
 function buildLCCard(court) {
@@ -2031,18 +2108,6 @@ function buildLCCard(court) {
   if (isDone) timerClass = 'done';
   else if (isRunning) timerClass = 'running';
   else if (isPaused) timerClass = 'paused';
-
-  const evts = getGameEvents(g.id);
-
-  const evtRows = evts.length
-    ? evts.map(e => `<div class="lc-event-row">
-        <span class="lc-er-icon">${evtIcon(g.sport,e.type)}</span>
-        <span class="lc-er-min">${e.minute}'</span>
-        <span class="lc-er-player">${e.player||e.type}</span>
-        <span class="lc-er-team">${(e.team==='team1'?g.team1:g.team2).slice(0,10)}</span>
-        <button class="lc-er-del" onclick="deleteEvent('${g.id}','${e.id}');lcRefreshCard('${g.id}')">✕</button>
-      </div>`).join('')
-    : '<div style="color:var(--dim);font-size:11px;text-align:center;padding:6px">No events yet</div>';
 
   const cardClass = g.status==='final' ? 'is-final' : isRunning ? 'is-live' : isPaused ? 'is-paused' : '';
 
@@ -2093,19 +2158,28 @@ function buildLCCard(court) {
       </div>
     </div>
 
-    <!-- Quick event entry -->
+    <!-- Live event log — newest at top, always visible -->
+    <div class="lc-event-list-hdr">${getGameEvents(g.id).length?'<span class="live-dot"></span>':''}Match Events (latest first)</div>
+    <div class="lc-event-list" id="lc-evtlog-${g.id}">${lcEventRowsHtml(g)}</div>
+
+    <!-- Quick event entry — pick the TEAM column, then the action -->
     <div class="lc-event-entry">
-      <div class="lc-evt-title">Log Event</div>
+      <div class="lc-evt-title">Log Event — type player, then tap under the right team</div>
       <div class="lc-evt-name-row">
-        <input type="text" id="lc-player-${g.id}" placeholder="Player name (optional)" autocomplete="off">
+        <input type="text" id="lc-player-${g.id}" list="roster-${g.id}" placeholder="Player name (optional)" autocomplete="off">
+        <datalist id="roster-${g.id}">${lcGameRoster(g).map(p=>`<option value="${p}">`).join('')}</datalist>
       </div>
-      <div class="lc-evt-type-row">
-        ${lcEventButtons(g)}
+      <div class="lc-evt-teams">
+        <div class="lc-evt-team-block">
+          <div class="lc-evt-team-hdr">${g.team1}</div>
+          ${lcTeamEventButtons(g,'team1')}
+        </div>
+        <div class="lc-evt-team-block">
+          <div class="lc-evt-team-hdr">${g.team2}</div>
+          ${lcTeamEventButtons(g,'team2')}
+        </div>
       </div>
     </div>
-
-    <!-- Event log -->
-    <div class="lc-event-list" id="lc-evtlog-${g.id}">${evtRows}</div>
   </div>`;
 }
 
@@ -2137,20 +2211,15 @@ function lcRefreshCard(gameId) {
     else if (isPaused) card.classList.add('is-paused');
   }
 
-  // Update event log
+  // Update event log (newest first) + score numbers without full re-render
   const logEl = document.getElementById(`lc-evtlog-${gameId}`);
   const g = state.games[gameId];
-  if (logEl && g) {
-    const evts = getGameEvents(gameId);
-    logEl.innerHTML = evts.length
-      ? evts.map(e => `<div class="lc-event-row">
-          <span class="lc-er-icon">${evtIcon(g.sport,e.type)}</span>
-          <span class="lc-er-min">${e.minute}'</span>
-          <span class="lc-er-player">${e.player||e.type}</span>
-          <span class="lc-er-team">${(e.team==='team1'?g.team1:g.team2).slice(0,10)}</span>
-          <button class="lc-er-del" onclick="deleteEvent('${gameId}','${e.id}');lcRefreshCard('${gameId}')">✕</button>
-        </div>`).join('')
-      : '<div style="color:var(--dim);font-size:11px;text-align:center;padding:6px">No events yet</div>';
+  if (logEl && g) logEl.innerHTML = lcEventRowsHtml(g);
+  if (g) {
+    const s1 = document.getElementById(`lc-score-${gameId}-team1`);
+    const s2 = document.getElementById(`lc-score-${gameId}-team2`);
+    if (s1) s1.textContent = g.score1;
+    if (s2) s2.textContent = g.score2;
   }
 }
 
@@ -2493,37 +2562,169 @@ function tvKeyHandler(e) {
 }
 
 // ══════════════════════════════════════════════════════════════
-// SETUP
+// SETUP — team names + player rosters (manual & import)
 // ══════════════════════════════════════════════════════════════
 let setupSport = 'soccer';
+let setupMode = 'names';          // 'names' | 'players'
+let rosterTeamIdx = 0;            // which team's roster is being edited
+
+function switchSetupMode(mode) {
+  setupMode = mode;
+  document.getElementById('smode-names').className   = mode==='names'?'btn btn-gold':'btn btn-outline';
+  document.getElementById('smode-players').className = mode==='players'?'btn btn-gold':'btn btn-outline';
+  switchSetupSport(setupSport);
+}
 
 function switchSetupSport(sp) {
   setupSport = sp;
   ['soccer','basketball','volleyball'].forEach(s => {
     document.getElementById(`sst-${s}`).className = s===sp?'btn btn-gold':'btn btn-outline';
   });
+  if (setupMode === 'names') renderNamesEditor(sp);
+  else renderRostersEditor(sp);
+}
+
+function renderNamesEditor(sp) {
   const teams = state.teams[sp];
   document.getElementById('setupBody').innerHTML =
-    `<div class="team-grid">${teams.map((t,i) =>
-      `<input type="text" id="st-${sp}-${i}" placeholder="Team ${i+1}" value="${t}">`
+    `<p style="font-size:12px;color:var(--dim);margin-bottom:10px">Enter team names. Changes apply live to brackets, schedule &amp; displays.</p>
+     <div class="team-grid">${teams.map((t,i) =>
+      `<input type="text" id="st-${sp}-${i}" placeholder="Team ${i+1}" value="${t.replace(/"/g,'&quot;')}">`
     ).join('')}</div>`;
 }
 
-function saveSetup() {
-  ['soccer','basketball','volleyball'].forEach(sp => {
-    state.teams[sp] = state.teams[sp].map((old, i) => {
-      const v = document.getElementById(`st-${sp}-${i}`)?.value?.trim();
-      return v || old;
-    });
-    // Push new names into every game that references a team by index
-    Object.values(state.games).filter(g => g.sport === sp).forEach(g => {
-      if (g.team1Idx != null) g.team1 = state.teams[sp][g.team1Idx] || g.team1;
-      if (g.team2Idx != null) g.team2 = state.teams[sp][g.team2Idx] || g.team2;
-    });
+function renderRostersEditor(sp) {
+  if (!state.rosters) state.rosters = { soccer:{}, basketball:{}, volleyball:{} };
+  if (!state.rosters[sp]) state.rosters[sp] = {};
+  const teams = state.teams[sp];
+  if (rosterTeamIdx >= teams.length) rosterTeamIdx = 0;
+  const players = state.rosters[sp][rosterTeamIdx] || [];
+
+  document.getElementById('setupBody').innerHTML = `
+    <div class="roster-import">
+      <h4>📥 Import all rosters (Excel / CSV)</h4>
+      <p>File or paste below. Format: <strong>one row per team</strong> — first cell = team name, remaining cells = players.<br>
+      Or one row per player: <strong>Team Name, Player Name</strong>. Team names are matched to the list above.</p>
+      <input type="file" id="rosterFile" accept=".csv,.xlsx,.xls,.tsv,.txt" onchange="importRosterFile(this,'${sp}')">
+      <textarea id="rosterPaste" placeholder="Khalsa Lions, Gagan Singh, Harkirat, Manvir&#10;Babbar Ballers, Sidak, Arjan, Jaspreet"></textarea>
+      <div style="margin-top:8px"><button class="btn btn-gold" style="font-size:12px;padding:6px 14px" onclick="importRosterPaste('${sp}')">Import pasted text</button></div>
+    </div>
+
+    <div class="roster-team-sel">
+      <select id="rosterTeamSel" onchange="rosterSelectTeam(this.value,'${sp}')">
+        ${teams.map((t,i)=>`<option value="${i}" ${i===rosterTeamIdx?'selected':''}>${t}${(state.rosters[sp][i]||[]).length?` (${state.rosters[sp][i].length})`:''}</option>`).join('')}
+      </select>
+      <span class="roster-count" id="rosterCount">${players.length} player${players.length===1?'':'s'}</span>
+    </div>
+    <div class="roster-hint">One player per line for <strong>${teams[rosterTeamIdx]}</strong>:</div>
+    <textarea id="rosterTextarea" placeholder="One player name per line">${players.join('\n')}</textarea>
+  `;
+}
+
+function rosterSelectTeam(idx, sp) {
+  // Save current textarea before switching
+  saveRosterTextarea(sp);
+  rosterTeamIdx = parseInt(idx);
+  renderRostersEditor(sp);
+}
+
+function saveRosterTextarea(sp) {
+  const ta = document.getElementById('rosterTextarea');
+  if (!ta) return;
+  const players = ta.value.split('\n').map(s=>s.trim()).filter(Boolean);
+  if (!state.rosters[sp]) state.rosters[sp] = {};
+  state.rosters[sp][rosterTeamIdx] = players;
+}
+
+// Parse CSV / TSV text into rows of cells
+function parseDelimited(text) {
+  return text.split(/\r?\n/).map(line => line.trim()).filter(Boolean).map(line => {
+    const delim = line.includes('\t') ? '\t' : ',';
+    return line.split(delim).map(c => c.trim().replace(/^"|"$/g,'')).filter(c => c.length);
+  }).filter(r => r.length);
+}
+
+// Apply parsed rows to rosters for a sport. Rule: cell[0] = team, rest = players (accumulates)
+function applyRosterRows(rows, sp) {
+  if (!state.rosters[sp]) state.rosters[sp] = {};
+  const teams = state.teams[sp].map(t => t.toLowerCase());
+  let matched = 0, unmatched = [];
+  rows.forEach(cells => {
+    if (cells.length < 2) return;
+    const teamName = cells[0];
+    const idx = teams.indexOf(teamName.toLowerCase());
+    if (idx === -1) { unmatched.push(teamName); return; }
+    const players = cells.slice(1);
+    const existing = state.rosters[sp][idx] || [];
+    // Merge, avoiding duplicates
+    players.forEach(p => { if (!existing.includes(p)) existing.push(p); });
+    state.rosters[sp][idx] = existing;
+    matched++;
   });
   save();
+  renderRostersEditor(sp);
+  if (unmatched.length) {
+    flash(`⚠️ ${matched} team(s) imported. Unmatched: ${[...new Set(unmatched)].slice(0,3).join(', ')}${unmatched.length>3?'…':''}`, true);
+  } else {
+    flash(`✅ Rosters imported for ${matched} team(s)`);
+  }
+}
+
+function importRosterPaste(sp) {
+  const ta = document.getElementById('rosterPaste');
+  if (!ta || !ta.value.trim()) return flash('Paste some rows first', true);
+  applyRosterRows(parseDelimited(ta.value), sp);
+}
+
+function importRosterFile(input, sp) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const name = file.name.toLowerCase();
+  const isExcel = name.endsWith('.xlsx') || name.endsWith('.xls');
+
+  if (isExcel) {
+    if (!window.XLSX) return flash('Excel library still loading — try again in a moment, or save as CSV', true);
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const wb = XLSX.read(new Uint8Array(e.target.result), {type:'array'});
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, {header:1})
+          .map(r => r.map(c => String(c).trim()).filter(Boolean))
+          .filter(r => r.length);
+        applyRosterRows(rows, sp);
+      } catch(err) { flash('Could not read Excel file: '+err.message, true); }
+    };
+    reader.readAsArrayBuffer(file);
+  } else {
+    const reader = new FileReader();
+    reader.onload = e => applyRosterRows(parseDelimited(e.target.result), sp);
+    reader.readAsText(file);
+  }
+  input.value = '';
+}
+
+function saveSetup() {
+  if (setupMode === 'names') {
+    ['soccer','basketball','volleyball'].forEach(sp => {
+      // Only read inputs for the sport currently shown; others keep their values
+      state.teams[sp] = state.teams[sp].map((old, i) => {
+        const el = document.getElementById(`st-${sp}-${i}`);
+        const v = el?.value?.trim();
+        return v || old;
+      });
+      Object.values(state.games).filter(g => g.sport === sp).forEach(g => {
+        if (g.team1Idx != null) g.team1 = state.teams[sp][g.team1Idx] || g.team1;
+        if (g.team2Idx != null) g.team2 = state.teams[sp][g.team2Idx] || g.team2;
+      });
+    });
+    flash('✅ Team names updated live');
+  } else {
+    saveRosterTextarea(setupSport);
+    flash('✅ Rosters saved');
+  }
+  save();
   closeModal('setupModal');
-  flash('✅ Team names updated live');
   renderAll();
   if (currentView === 'livecontrol') renderLCGrid();
   seUpdateSport();
@@ -2660,7 +2861,9 @@ window.applyFirebaseState = (data) => {
     events: data.events || {},
     timers: data.timers || {},
     activeCourts: data.activeCourts !== undefined ? data.activeCourts : null,
+    rosters: data.rosters || { soccer:{}, basketball:{}, volleyball:{} },
   });
+  normalizeTeamNames(state);
   renderAll();
   if (currentView === 'scorer') { seLoadGame(); renderEventLog(); }
   if (currentView === 'livecontrol') renderLCGrid();
@@ -2675,6 +2878,8 @@ showSport('soccer', false);
 if (history.pushState) history.pushState({ view: 'dashboard', sport: 'soccer' }, '', '#dashboard');
 window._appReady = true;
 </script>
+<!-- SheetJS (for Excel roster import; CSV works without it) -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
