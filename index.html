@@ -102,28 +102,33 @@ hr.sep{border:none;border-top:1px solid var(--gray3);margin:20px 0}
 .delay-btn.neg:hover{background:var(--green);color:#fff}
 .delay-current{font-size:12px;font-weight:700;min-width:60px;color:var(--gold)}
 
-/* ── BRACKET ── */
+/* ── BRACKET (structured tree) ── */
 .bracket-wrap{overflow-x:auto;padding-bottom:8px}
-.bracket{display:flex;align-items:flex-start;gap:0}
-.br-round{display:flex;flex-direction:column;min-width:185px}
-.br-round-hdr{text-align:center;font-size:10px;font-weight:700;color:var(--dim);letter-spacing:1px;text-transform:uppercase;padding:5px 10px;background:var(--gray);border-bottom:1px solid var(--gray3)}
-.br-games{display:flex;flex-direction:column;justify-content:space-around;padding:6px;gap:6px;flex:1}
-.matchup{background:var(--gray2);border:1px solid var(--gray3);border-radius:7px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.bracket{display:flex;align-items:stretch;gap:0;min-width:min-content}
+.br-round{display:flex;flex-direction:column;min-width:210px;flex:1}
+.br-round-hdr{text-align:center;font-size:11px;font-weight:800;color:var(--text);letter-spacing:1.5px;text-transform:uppercase;padding:8px 10px;margin-bottom:4px}
+.br-games{display:flex;flex-direction:column;justify-content:space-around;padding:6px 18px;gap:10px;flex:1}
+/* connector elbows between rounds */
+.bm-wrap{position:relative;display:flex;flex-direction:column}
+.br-round:not(:last-child) .bm-wrap::after{content:'';position:absolute;top:calc(50% + 7px);right:-18px;width:18px;height:2px;background:var(--gray3)}
+.br-round:not(:first-child) .bm-wrap::before{content:'';position:absolute;top:calc(50% + 7px);left:-18px;width:18px;height:2px;background:var(--gray3)}
+.bm-badge{align-self:flex-start;font-size:9px;font-weight:800;color:var(--dim);background:var(--gray);border:1px solid var(--gray3);border-radius:5px;padding:1px 7px;margin-bottom:4px;letter-spacing:.5px}
+.matchup{background:var(--gray2);border:1px solid var(--gray3);border-radius:8px;overflow:hidden;cursor:pointer;transition:border-color .15s;position:relative}
 .matchup:hover{border-color:var(--gold)}
 .matchup.is-live{border-color:var(--live);box-shadow:0 0 10px rgba(224,80,80,.2)}
-.matchup.is-live::after{content:'LIVE';position:absolute;top:3px;right:5px;font-size:8px;font-weight:700;color:var(--live);letter-spacing:1px;animation:pulse 1s infinite}
-.matchup{position:relative}
-.tr{display:flex;align-items:center;padding:7px 8px;gap:7px;border-bottom:1px solid var(--gray3);transition:background .1s}
+.matchup.is-live::after{content:'LIVE';position:absolute;top:3px;right:6px;font-size:8px;font-weight:700;color:var(--live);letter-spacing:1px;animation:pulse 1s infinite;z-index:1}
+.tr{display:flex;align-items:center;padding:9px 10px;gap:8px;border-bottom:1px solid var(--gray3);transition:background .1s}
 .tr:last-child{border-bottom:none}
 .tr.won{background:var(--win-bg)}
-.tr.lost{background:var(--loss-bg);opacity:.7}
+.tr.lost{opacity:.5}
 .tr.dq-row{opacity:.4;text-decoration:line-through}
-.tr-seed{font-size:10px;color:var(--dim);width:16px;text-align:right;flex-shrink:0}
-.tr-name{flex:1;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr-seed{font-size:10px;color:var(--dim);width:20px;height:18px;line-height:18px;text-align:center;flex-shrink:0;background:var(--gray);border-radius:4px;font-weight:700}
+.tr-name{flex:1;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr.won .tr-name{color:var(--gold-light);font-weight:800}
 .tr-name.tbd{color:var(--dim);font-weight:400;font-style:italic}
-.tr-score{font-size:15px;font-weight:700;min-width:24px;text-align:right}
+.tr-score{font-size:16px;font-weight:800;min-width:24px;text-align:right}
 .tr.won .tr-score{color:var(--gold-light)}
-.match-time{font-size:9px;color:var(--dim);text-align:center;padding:2px 4px;background:rgba(0,0,0,.2)}
+.bm-time{font-size:10px;color:var(--dim);text-align:center;padding:5px 4px 0}
 
 /* ── POOLS ── */
 .pools-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:20px}
@@ -307,20 +312,20 @@ body.tv-on .header,.tv-on .sport-tabs,.tv-on #liveBanner,.tv-on .view{display:no
 .tv-nav-btn{background:rgba(255,255,255,.06);border:1px solid var(--gray3);color:var(--dim);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .tv-nav-btn:hover{border-color:var(--gold);color:var(--gold)}
 
-/* TV V1: Live Scores grid */
-.tv-live-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:16px;flex:1;align-content:start}
-.tv-live-card{background:var(--gray2);border:2px solid var(--gray3);border-radius:12px;padding:16px;display:flex;flex-direction:column}
-.tv-live-card.is-live{border-color:var(--live);box-shadow:0 0 20px rgba(224,80,80,.18)}
-.tv-lc-sport{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
-.tv-lc-team{display:flex;justify-content:space-between;align-items:center;padding:6px 0}
-.tv-lc-name{font-size:16px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tv-lc-score{font-size:42px;font-weight:900;color:var(--gold);line-height:1;min-width:48px;text-align:right}
-.tv-lc-vs{text-align:center;font-size:11px;color:var(--dim);margin:2px 0}
-.tv-lc-status{font-size:10px;text-align:center;margin-top:6px;padding-top:6px;border-top:1px solid var(--gray3)}
+/* TV V1: Live Scores grid — fills the whole screen, columns set per count */
+.tv-live-grid{display:grid;gap:16px;padding:18px;flex:1;min-height:0;grid-auto-rows:1fr;align-content:stretch}
+.tv-live-card{background:var(--gray2);border:2px solid var(--gray3);border-radius:16px;padding:22px 26px;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.tv-live-card.is-live{border-color:var(--live);box-shadow:0 0 24px rgba(224,80,80,.2)}
+.tv-lc-sport{font-size:clamp(12px,1.4vw,18px);font-weight:800;color:var(--dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:auto}
+.tv-lc-team{display:flex;justify-content:space-between;align-items:center;padding:clamp(6px,1vh,16px) 0}
+.tv-lc-name{font-size:clamp(20px,2.6vw,40px);font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:14px}
+.tv-lc-score{font-size:clamp(44px,6vw,104px);font-weight:900;color:var(--gold);line-height:.9;min-width:1.4em;text-align:right}
+.tv-lc-vs{text-align:center;font-size:clamp(11px,1.1vw,16px);color:var(--dim);margin:2px 0}
+.tv-lc-status{font-size:clamp(12px,1.3vw,18px);text-align:center;margin-top:auto;padding-top:10px;border-top:1px solid var(--gray3);font-weight:700}
 .tv-lc-status.live{color:var(--live);animation:pulse 1.5s infinite}
 .tv-lc-status.done{color:var(--dim)}
-.tv-lc-events{margin-top:6px;display:flex;flex-direction:column;gap:2px}
-.tv-lc-event{font-size:10px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tv-lc-events{margin-top:8px;display:flex;flex-direction:column;gap:3px}
+.tv-lc-event{font-size:clamp(11px,1.1vw,15px);color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* TV V2: Bracket Standings */
 .tv-bracket-view{flex:1;display:flex;flex-direction:column;padding:16px;gap:12px;overflow:hidden}
@@ -971,22 +976,46 @@ function defaultState() {
 function normalizeTeamNames(s) {
   if (!s || !s.games) return s;
   if (!s.rosters) s.rosters = { soccer:{}, basketball:{}, volleyball:{} };
+
+  // Firebase can return arrays as objects ({0:..,1:..}) or drop them entirely.
+  // Coerce each sport's team list back to a proper array and backfill any
+  // missing slots from the Khalsa defaults so seed lookups never fail.
+  const fb = defaultTeams();
+  if (!s.teams) s.teams = {};
+  ['soccer','basketball','volleyball'].forEach(sp => {
+    let list = s.teams[sp];
+    if (list && !Array.isArray(list)) list = Object.values(list);   // object -> array
+    if (!Array.isArray(list)) list = [];
+    for (let i = 0; i < 20; i++) {
+      if (!list[i] || !String(list[i]).trim()) list[i] = fb[sp][i];  // backfill blanks
+    }
+    s.teams[sp] = list;
+  });
+
+  // Resolve "T#" seed refs to real names. For first-round games the seed IS
+  // the source of truth, so always overwrite.
   Object.values(s.games).forEach(g => {
     const parts = (g.desc || '').split(' vs ');
-    const list = (s.teams && s.teams[g.sport]) || [];
+    const list = s.teams[g.sport] || fb[g.sport];
     [['team1', 0], ['team2', 1]].forEach(([key, i]) => {
       const raw = (parts[i] || '').trim();
       const m = raw.match(/^T(\d+)$/);
       if (m) {
         const idx = parseInt(m[1]) - 1;
         g[key + 'Idx'] = idx;
-        // Only overwrite if current value is still a raw ref or empty
-        if (/^T\d+$/.test(g[key] || '') || !g[key] || g[key] === 'TBD') {
-          g[key] = list[idx] || raw;
-        }
+        g[key] = list[idx] || fb[g.sport][idx] || raw;
       }
     });
   });
+
+  // Clamp any runaway court delays (a stray cascade in test mode could push
+  // these to absurd values like -46698m). Real delays live within ±3 hours.
+  if (s.courtDelays) {
+    Object.keys(s.courtDelays).forEach(c => {
+      const v = s.courtDelays[c];
+      if (typeof v !== 'number' || !isFinite(v) || Math.abs(v) > 180) s.courtDelays[c] = 0;
+    });
+  }
   return s;
 }
 
@@ -1256,7 +1285,7 @@ function renderScheduleTable(sport, slots, slotMin, courts, title) {
 
       html += `<div class="sg-cell ${cellClass}" onclick="seSelectGameById('${g.id}');showView('scorer')">
         <div class="sg-game">
-          <div class="sg-teams ${g.team1==='TBD'||g.team1.startsWith('T')?'tbd':''}">${g.team1} vs ${g.team2}${delayStr}</div>
+          <div class="sg-teams ${isPlaceholderName(g.team1)&&isPlaceholderName(g.team2)?'tbd':''}">${g.team1} vs ${g.team2}${delayStr}</div>
           ${isDone||isLive ? `<div class="sg-score">${g.score1} – ${g.score2}</div>` : ''}
           <div class="sg-phase">${g.round}</div>
           <div class="sg-status ${isDone?'done':isLive?'live':'upcoming'}">${isDone?'✓ Final':isLive?'● LIVE':'Upcoming'}</div>
@@ -1496,26 +1525,38 @@ function buildScheduleGrid(sport) {
   </div>`;
 }
 
+// Assign a stable G# to every game of a sport, in schedule order
+function gameNumbers(sport) {
+  const map = {};
+  Object.values(state.games)
+    .filter(g => g.sport === sport)
+    .sort((a,b) => a.scheduledStart - b.scheduledStart || (a.court<b.court?-1:1))
+    .forEach((g,i) => { map[g.id] = i + 1; });
+  return map;
+}
+
 function buildBracketSection(sport, phase, label) {
   const games = Object.values(state.games)
     .filter(g => g.sport === sport && (g.phase === phase || g.phase.startsWith(phase)))
     .sort((a,b) => effectiveStart(a)-effectiveStart(b));
   if (!games.length) return '';
 
-  // Group by round
+  // Group by round (preserve schedule order of rounds)
   const roundMap = {};
+  const roundOrder = [];
   games.forEach(g => {
-    if (!roundMap[g.round]) roundMap[g.round] = [];
+    if (!roundMap[g.round]) { roundMap[g.round] = []; roundOrder.push(g.round); }
     roundMap[g.round].push(g);
   });
-  const rounds = Object.keys(roundMap);
+
+  const gnums = gameNumbers(sport);
 
   let html = `<div style="font-size:13px;font-weight:700;color:var(--dim);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">${label}</div>
     <div class="bracket-wrap"><div class="bracket">`;
 
-  rounds.forEach(r => {
+  roundOrder.forEach(r => {
     html += `<div class="br-round"><div class="br-round-hdr">${r}</div><div class="br-games">`;
-    roundMap[r].forEach(g => { html += matchupCard(g); });
+    roundMap[r].forEach(g => { html += matchupCard(g, gnums[g.id]); });
     html += '</div></div>';
   });
 
@@ -1523,27 +1564,38 @@ function buildBracketSection(sport, phase, label) {
   return html;
 }
 
-function matchupCard(g) {
-  const n = now();
+// Is this a real, resolved team name (vs a seed/placeholder ref like T1, L2, WBW3)?
+function isPlaceholderName(name) {
+  return !name || name === 'TBD' || /^(T|L|W|WB|LB|WBW|WBL|LBW|QF|SF)\d/i.test(name) || /Winner|Loser/i.test(name);
+}
+
+function matchupCard(g, gnum) {
   const isLv = (isLiveByTime(g) && g.status !== 'final') || g.status === 'live';
   const isDone = g.status === 'final';
   const t1w = isDone && g.score1 > g.score2;
   const t2w = isDone && g.score2 > g.score1;
   const dly = state.courtDelays[g.court]||0;
-  const timeStr = fmtTime(effectiveStart(g)) + (dly!==0?` <span style="color:${dly>0?'var(--live)':'var(--green)'};font-size:9px">${dly>0?'+':''}${dly}m</span>`:'');
+  const seed1 = g.team1Idx != null ? g.team1Idx + 1 : '';
+  const seed2 = g.team2Idx != null ? g.team2Idx + 1 : '';
+  const tbd1 = isPlaceholderName(g.team1), tbd2 = isPlaceholderName(g.team2);
+  const dlyStr = dly!==0?` <span style="color:${dly>0?'var(--live)':'var(--green)'}">${dly>0?'+':''}${dly}m</span>`:'';
+  const dateStr = new Date(effectiveStart(g)).toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'});
 
-  return `<div class="matchup ${isLv?'is-live':''}" onclick="seSelectGameById('${g.id}');showView('scorer')">
-    <div class="match-time">${timeStr} · ${g.court}</div>
-    <div class="tr ${t1w?'won':''} ${!t1w&&isDone?'lost':''} ${g.dq==='team1'?'dq-row':''}">
-      <span class="tr-seed"></span>
-      <span class="tr-name ${g.team1.startsWith('T')||g.team1==='TBD'?'tbd':''}">${g.team1}${g.dq==='team1'?' 🚫':''}</span>
-      <span class="tr-score">${isDone||isLv?g.score1:''}</span>
+  return `<div class="bm-wrap">
+    <div class="bm-badge">G${gnum||'?'}</div>
+    <div class="matchup ${isLv?'is-live':''}" onclick="seSelectGameById('${g.id}');showView('scorer')">
+      <div class="tr ${t1w?'won':''} ${!t1w&&isDone?'lost':''} ${g.dq==='team1'?'dq-row':''}">
+        <span class="tr-seed">${seed1}</span>
+        <span class="tr-name ${tbd1?'tbd':''}">${g.team1}${g.dq==='team1'?' 🚫':''}</span>
+        <span class="tr-score">${isDone||isLv?g.score1:''}</span>
+      </div>
+      <div class="tr ${t2w?'won':''} ${!t2w&&isDone?'lost':''} ${g.dq==='team2'?'dq-row':''}">
+        <span class="tr-seed">${seed2}</span>
+        <span class="tr-name ${tbd2?'tbd':''}">${g.team2}${g.dq==='team2'?' 🚫':''}</span>
+        <span class="tr-score">${isDone||isLv?g.score2:''}</span>
+      </div>
     </div>
-    <div class="tr ${t2w?'won':''} ${!t2w&&isDone?'lost':''} ${g.dq==='team2'?'dq-row':''}">
-      <span class="tr-seed"></span>
-      <span class="tr-name ${g.team2.startsWith('T')||g.team2==='TBD'?'tbd':''}">${g.team2}${g.dq==='team2'?' 🚫':''}</span>
-      <span class="tr-score">${isDone||isLv?g.score2:''}</span>
-    </div>
+    <div class="bm-time">${dateStr} · ${fmtTime(effectiveStart(g))}${dlyStr} · ${g.court.replace(/^(Soccer |Basketball |)/,'')}</div>
   </div>`;
 }
 
@@ -1622,11 +1674,13 @@ function seSubmit() {
     g.loser  = s1 >= s2 ? g.team2 : g.team1;
     if (!g.ts) g.ts = now();
 
-    // Check if ended early or late vs schedule
+    // Check if ended early or late vs schedule. Only prompt for realistic
+    // differences (≤90 min) so testing far from the event date — when "now"
+    // is months off — can't push an absurd delay onto the court.
     const n = now();
     const scheduledEnd = effectiveEnd(g);
     const diffMin = Math.round((n - scheduledEnd) / 60000);
-    if (Math.abs(diffMin) >= 3) promptCascade(g, diffMin);
+    if (Math.abs(diffMin) >= 3 && Math.abs(diffMin) <= 90) promptCascade(g, diffMin);
   }
 
   save();
@@ -2343,7 +2397,13 @@ function renderTVCurrentView() {
 function renderTV1() {
   const el = document.getElementById('tvLiveGrid');
   if (!el) return;
-  el.innerHTML = getActiveTVCourts().map(c => {
+  const courts = getActiveTVCourts();
+  // Choose a column count that fills the screen for the number of courts shown
+  const n = courts.length;
+  let cols = n <= 1 ? 1 : n === 2 ? 2 : n <= 4 ? 2 : n <= 6 ? 3 : 4;
+  if (window.innerWidth < 900) cols = Math.min(cols, 2);  // phones
+  el.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  el.innerHTML = courts.map(c => {
     const cGames = Object.values(state.games).filter(g => g.court === c.court).sort((a,b) => effectiveStart(a)-effectiveStart(b));
     const live = cGames.find(g => (isLiveByTime(g) && g.status !== 'final') || g.status === 'live');
     const last = !live && cGames.filter(g => g.status === 'final').sort((a,b)=>b.ts-a.ts)[0];
@@ -2870,6 +2930,7 @@ window.applyFirebaseState = (data) => {
 };
 
 // ── INIT ──
+normalizeTeamNames(state);   // ensure local state is clean before first paint
 renderBanner();
 renderDashboard();
 seUpdateSport();
@@ -2877,6 +2938,8 @@ showSport('soccer', false);
 // Push initial history state so back button works from the start
 if (history.pushState) history.pushState({ view: 'dashboard', sport: 'soccer' }, '', '#dashboard');
 window._appReady = true;
+// Heal any corrupted data (raw team refs, runaway delays) back to storage + Firebase
+save();
 </script>
 <!-- SheetJS (for Excel roster import; CSV works without it) -->
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
