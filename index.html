@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Khalsa Olympics 2026 — Live Dashboard</title>
 <style>
 :root {
@@ -612,7 +613,10 @@ let state = (() => {
   return defaultState();
 })();
 
-function save() { localStorage.setItem(SK, JSON.stringify(state)); }
+function save() {
+  localStorage.setItem(SK, JSON.stringify(state));
+  if (window.firebaseSave) window.firebaseSave(state);
+}
 
 // ══════════════════════════════════════════════════════════════
 // GAME BUILDING FROM SLOTS
@@ -652,7 +656,7 @@ function now() {
 }
 
 function effectiveStart(game) {
-  const delay = (state.courtDelays[game.court]||0) * 60000;
+  const delay = ((state.courtDelays||{})[game.court]||0) * 60000;
   return game.scheduledStart + delay;
 }
 
@@ -1420,21 +1424,57 @@ setInterval(() => {
   if (document.getElementById('tvClock')) document.getElementById('tvClock').textContent = t;
 }, 1000);
 
-// localStorage sync (multi-device)
-setInterval(() => {
-  try {
-    const raw = localStorage.getItem(SK);
-    if (!raw) return;
-    const remote = JSON.parse(raw);
-    if (remote && remote.games) { state = remote; renderAll(); }
-  } catch(e) {}
-}, 15000);
-
+// Firebase handles real-time sync across devices
+window.applyFirebaseState = (data) => {
+  if (!window._appReady) return;
+  // Merge with defaults to ensure all required fields exist
+  state = Object.assign({}, defaultState(), data, {
+    courtDelays: data.courtDelays || {},
+    teams: data.teams || defaultTeams(),
+    games: data.games || {},
+    simTime: data.simTime || null
+  });
+  renderAll();
+};
 // ── INIT ──
 renderBanner();
 renderDashboard();
 seUpdateSport();
 showSport('soccer');
+window._appReady = true;
+</script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyABgOhSS0OCV1n3ScsEu_K0Hii-CchVgzQ",
+    authDomain: "project-173ce15a-0014-4a65-962.firebaseapp.com",
+    databaseURL: "https://project-173ce15a-0014-4a65-962-default-rtdb.firebaseio.com",
+    projectId: "project-173ce15a-0014-4a65-962",
+    storageBucket: "project-173ce15a-0014-4a65-962.firebasestorage.app",
+    messagingSenderId: "41446422135",
+    appId: "1:41446422135:web:e10bc2d6f15c8173b6b872"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  window.firebaseSave = (state) => {
+    try { db.ref('ko2026').set(state); } catch(e) { console.warn('Firebase save failed:', e.message); }
+  };
+
+  db.ref('ko2026').on('value', (snapshot) => {
+    try {
+      const data = snapshot.val();
+      if (data && data.games && window._appReady) {
+        window._firebaseState = data;
+        if (window.applyFirebaseState) window.applyFirebaseState(data);
+      }
+    } catch(e) {
+      console.log('Firebase sync skipped:', e.message);
+    }
+  });
 </script>
 </body>
 </html>
